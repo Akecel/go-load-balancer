@@ -15,6 +15,14 @@ git clone https://github.com/Akecel/load-balancer.git
 
 ## Usage
 
+After start the docker container go on
+
+```sh
+http://localhost:3030
+```
+
+## Custom
+
 To custom balenced back-end use --backends (string) and separe them with commas
 
 ```sh
