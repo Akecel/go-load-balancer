@@ -14,10 +14,13 @@ git clone https://github.com/Akecel/load-balancer.git
 
 ## Usage
 
-After start the docker container go on
+```sh
+docker-compose up
+```
+And go to
 
 ```sh
-go run main.go
+http://localhost:3030
 ```
 
 To custom balenced back-end use --backends (string) and separe them with commas
@@ -29,17 +32,6 @@ To custom port use --port (int), default port is 8080
 
 ```sh
 --port=8081
-```
-
-## Test
-
-```sh
-docker-compose up
-```
-And go to
-
-```sh
-http://localhost:3030
 ```
 
 ## Author
