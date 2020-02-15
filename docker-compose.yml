@@ -4,7 +4,7 @@ services:
     build: ./
     container_name: load-balancer
     ports:
-      - "3030:3030"
+      - "8080:8080"
     command: --backends=http://back1,http://back2,http://back3
   back1:
     image: strm/helloworld-http
