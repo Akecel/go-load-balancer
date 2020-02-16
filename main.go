@@ -28,6 +28,12 @@ type Backend struct {
 	ReverseProxy *httputil.ReverseProxy
 }
 
+// Define information about different backends
+type ServerPool struct {
+	backends []*Backend
+	current  uint64
+}
+
 // Set Alive to true for a backend
 func (b *Backend) SetAlive(alive bool) {
 	b.mux.Lock()
@@ -43,20 +49,9 @@ func (b *Backend) IsAlive() (alive bool) {
 	return
 }
 
-// Define information about different backends
-type ServerPool struct {
-	backends []*Backend
-	current  uint64
-}
-
 // Add backends to the server pool
 func (s *ServerPool) AddBackend(backend *Backend) {
 	s.backends = append(s.backends, backend)
-}
-
-// Increase the counter and return an index
-func (s *ServerPool) NextIndex() int {
-	return int(atomic.AddUint64(&s.current, uint64(1)) % uint64(len(s.backends)))
 }
 
 // Changes a status of a backend
@@ -69,9 +64,26 @@ func (s *ServerPool) SetBackendStatus(backendUrl *url.URL, alive bool) {
 	}
 }
 
+// Test if a backend is alive with a TCP connection
+func isBackendAlive(u *url.URL) bool {
+	timeout := 2 * time.Second
+	conn, err := net.DialTimeout("tcp", u.Host, timeout)
+	if err != nil {
+		log.Println("Site unreachable, error: ", err)
+		return false
+	}
+	_ = conn.Close()
+	return true
+}
+
+// Increase the counter and return an index
+func (s *ServerPool) NextIndex() int {
+	return int(atomic.AddUint64(&s.current, uint64(1)) % uint64(len(s.backends)))
+}
+
 // Returns next active backend to take a connection
 func (s *ServerPool) GetNextActiveBackend() *Backend {
-	// loop entire backends to find out an Alive backend
+	// Loop entire backends to find out an Alive backend
 	next := s.NextIndex()
 	l := len(s.backends) + next // start from next and move a full cycle
 	for i := next; i < l; i++ {
@@ -96,6 +108,19 @@ func (s *ServerPool) HealthCheck() {
 			status = "down"
 		}
 		log.Printf("%s [%s]\n", b.URL, status)
+	}
+}
+
+// Runs a routine for check status of the backends every 2 mins
+func healthCheck() {
+	t := time.NewTicker(time.Minute * 2)
+	for {
+		select {
+		case <-t.C:
+			log.Println("Starting health check...")
+			serverPool.HealthCheck()
+			log.Println("Health check completed")
+		}
 	}
 }
 
@@ -130,31 +155,6 @@ func loadBalance(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	http.Error(w, "Service not available", http.StatusServiceUnavailable)
-}
-
-// Test if a backend is alive with a TCP connection
-func isBackendAlive(u *url.URL) bool {
-	timeout := 2 * time.Second
-	conn, err := net.DialTimeout("tcp", u.Host, timeout)
-	if err != nil {
-		log.Println("Site unreachable, error: ", err)
-		return false
-	}
-	_ = conn.Close()
-	return true
-}
-
-// Runs a routine for check status of the backends every 2 mins
-func healthCheck() {
-	t := time.NewTicker(time.Minute * 2)
-	for {
-		select {
-		case <-t.C:
-			log.Println("Starting health check...")
-			serverPool.HealthCheck()
-			log.Println("Health check completed")
-		}
-	}
 }
 
 var serverPool ServerPool
