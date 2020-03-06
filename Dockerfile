@@ -3,7 +3,6 @@ WORKDIR /app
 COPY main.go ./
 RUN CGO_ENABLED=0 GOOS=linux go build -o loadBalancer .
 
-FROM alpine:latest
-WORKDIR /root
+FROM scratch
 COPY --from=builder /app/loadBalancer .
-ENTRYPOINT [ "/root/loadBalancer" ]
+ENTRYPOINT [ "/loadBalancer" ]
