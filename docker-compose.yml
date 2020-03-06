@@ -5,10 +5,10 @@ services:
     container_name: load-balancer
     ports:
       - "8080:8080"
-    command: --backends=http://back1,http://back2,http://back3
-  back1:
+    command: --backends=http://backend_for_lb_1:80,http://backend_for_lb_2:80,http://backend_for_lb_3:80
+  backend_for_lb_1:
     image: hugobin/go-hello
-  back2:
+  backend_for_lb_2:
     image: hugobin/go-hello
-  back3:
+  backend_for_lb_3:
     image: hugobin/go-hello
