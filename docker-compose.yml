@@ -7,8 +7,8 @@ services:
       - "8080:8080"
     command: --backends=http://back1,http://back2,http://back3
   back1:
-    image: strm/helloworld-http
+    image: hugobin/go-hello
   back2:
-    image: strm/helloworld-http
+    image: hugobin/go-hello
   back3:
-    image: strm/helloworld-http
+    image: hugobin/go-hello
