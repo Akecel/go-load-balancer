@@ -28,6 +28,12 @@ type Backend struct {
 	ReverseProxy *httputil.ReverseProxy
 }
 
+// Define information about different backends
+type ServerPool struct {
+	backends []*Backend
+	current  uint64
+}
+
 // Set Alive to true for a backend
 func (b *Backend) SetAlive(alive bool) {
 	b.mux.Lock()
@@ -41,12 +47,6 @@ func (b *Backend) IsAlive() (alive bool) {
 	alive = b.Alive
 	b.mux.RUnlock()
 	return
-}
-
-// Define information about different backends
-type ServerPool struct {
-	backends []*Backend
-	current  uint64
 }
 
 // Add backends to the server pool
