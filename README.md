@@ -1,6 +1,7 @@
 # Load balancer in go 🔀
-![Version](https://img.shields.io/badge/version-1-blue.svg?cacheSeconds=2592000)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](#)
+
+## About
 
 Simple load balancer writen in go
 
@@ -33,7 +34,3 @@ To custom port use --port (int), default port is 8080
 ```sh
 --port=8081
 ```
-
-## Author
-
-👤 **Axel Rayer**
