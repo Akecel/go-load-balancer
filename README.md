@@ -1,21 +1,21 @@
-# Load balancer in go 🔀
+# Go load balancer 🔀
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](#)
 
 ## About
 
-Simple load balancer writen in go
+Simple load balancer writen in Golang
 
 ## Install
 
 Clone the project
 
 ```sh
-git clone https://github.com/Akecel/load-balancer.git
+git clone https://github.com/Akecel/go-load-balancer.git
 ```
 
 ## Usage
 
 ```sh
-docker-compose up
+docker-compose up --build
 ```
-And go to [http://localhost:3030](http://localhost:3030)
+And go to: [http://localhost:3030](http://localhost:3030)
