@@ -1,7 +1,9 @@
 version: "2"
 services:
-  front:
-    build: ./.docker/go
+  go:
+    build:
+      context: .
+      dockerfile: ./.docker/go/Dockerfile
     container_name: load-balancer
     ports:
       - "8080:8080"
