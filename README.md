@@ -18,4 +18,4 @@ git clone https://github.com/Akecel/go-load-balancer.git
 ```sh
 docker-compose up --build
 ```
-And go to: [http://localhost:3030](http://localhost:8080)
+And go to: [http://localhost:8080](http://localhost:8080)
